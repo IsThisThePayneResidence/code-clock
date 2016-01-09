@@ -4,6 +4,7 @@
 
 
 #include "codeclockapplication.h"
+#include <QSharedPointer>
 
 /**
  * CodeClockApplication implementation
@@ -16,17 +17,33 @@
  * @param _organization
  * @param _application
  */
- CodeClockApplication::CodeClockApplication(int _argc, char** _argv, const QString& _organization, const QString& _application)
+CodeClockApplication::CodeClockApplication(int _argc, char **_argv, const QString &_organization, const QString &_application, const QString &_version)
+    : QApplication(_argc, _argv),
+      mModel(QSharedPointer<AbstractModel>(new Model()))
 {
+    setOrganizationName(_organization);
+    setApplicationName(_application);
+    setApplicationDisplayName(_application);
+    setApplicationVersion(_version);
+}
 
+CodeClockApplication::CodeClockApplication(int _argc, char** _argv, const QString& _organization, const QString& _application,
+                                            const QString& _version, QSharedPointer<AbstractModel> _model)
+    : QApplication(_argc, _argv),
+      mModel(_model)
+{
+    setOrganizationName(_organization);
+    setApplicationName(_application);
+    setApplicationDisplayName(_application);
+    setApplicationVersion(_version);
 }
 
 /**
  * @return QSharedPointer<CodeClockApplication>
  */
-static QSharedPointer<CodeClockApplication> CodeClockApplication::app()
+QSharedPointer<CodeClockApplication> CodeClockApplication::app()
 {
-    return QSharedPointer<CodeClockApplication>();
+    return QSharedPointer<CodeClockApplication>((CodeClockApplication*)qApp);
 }
 
 /**
@@ -34,5 +51,6 @@ static QSharedPointer<CodeClockApplication> CodeClockApplication::app()
  */
 int CodeClockApplication::exec()
 {
-    return 0;
+    mModel->startTracking();
+    return QApplication::exec();
 }

@@ -6,11 +6,15 @@
 #ifndef _ABSTRACTMODEL_H
 #define _ABSTRACTMODEL_H
 
-#include "qobject.h"
+#include <QObject>
+#include <QDateTime>
 
+class AbstractTracker;
+class AbstractTrackableProcess;
 
 class AbstractModel: public QObject
 {
+    Q_OBJECT
 public: 
     
     virtual QSharedPointer<AbstractTracker> tracker() const = 0;
@@ -21,25 +25,38 @@ public:
      * @param _start
      * @param _start
      */
-    virtual QList<QSharedPointer<AbstractTrackableProcess>> processes(const QDate& _start, const QDate& _start) const = 0;
+    virtual QQueue<QSharedPointer<AbstractTrackableProcess>> processes(const QDateTime& _start, const QDateTime& _end) const = 0;
     
     /**
      * @param _name
      * @param _start
      * @param _start
      */
-    virtual QList<QSharedPointer<AbstractTrackableProcess>> processes(const QString& _name, const QDate& _start, const QDate& _start) const = 0;
+    virtual QQueue<QSharedPointer<AbstractTrackableProcess>> processes(const QString& _name, const QDateTime& _start, const QDateTime& _end) const = 0;
     
     /**
      * @param _name
      */
-    virtual QList<QSharedPointer<AbstractTrackableProcess>> processes(const QString& _name) const = 0;
+    virtual QQueue<QSharedPointer<AbstractTrackableProcess>> processes(const QString& _name) const = 0;
     
-    virtual QList<QSharedPointer<AbstractTrackableProcess>> processes() const = 0;
-    
-    virtual void startTracking() = 0;
-    
+    virtual QQueue<QSharedPointer<AbstractTrackableProcess>> processes() const = 0;
+
+signals:
+
+    void started();
+
+    void stopped();
+
+public slots:
+
+    virtual void startTracking(int _timerTimeoutMsec = 1000) = 0;
+
     virtual void stopTracking() = 0;
+
+protected:
+
+private:
+
 };
 
 #endif //_ABSTRACTMODEL_H

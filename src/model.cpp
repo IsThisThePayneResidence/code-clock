@@ -3,79 +3,68 @@
  */
 
 
+#include <QSharedPointer>
+#include <QQueue>
+#include <QSharedPointer>
 #include "model.h"
+#include "abstracttracker.h"
 
-/**
- * Model implementation
- */
-
-
-/**
- * @return QSharedPointer<AbstractTracker>
- */
-virtual QSharedPointer<AbstractTracker> Model::tracker() const 
+Model::Model(QSharedPointer<AbstractTracker> _tracker, QObject* _parent)
+    : mTracker(_tracker)
 {
-    return QSharedPointer<AbstractTracker>();
+    setParent(_parent);
 }
 
-/**
- * @return QSharedPointer<AbstractTrackableProcess>
- */
-virtual QSharedPointer<AbstractTrackableProcess> Model::currentProcess() const 
+Model::Model(QObject *_parent)
+    : mTracker(QSharedPointer<AbstractTracker>(new Tracker()))
 {
-    return QSharedPointer<AbstractTrackableProcess>();
+    setParent(_parent);
 }
 
-/**
- * @param _start
- * @param _start
- * @return QList<QSharedPointer<AbstractTrackableProcess>>
- */
-virtual QList<QSharedPointer<AbstractTrackableProcess>> Model::processes(const QDate& _start, const QDate& _start) const 
+QSharedPointer<AbstractTracker> Model::tracker() const
 {
-    return QList<QSharedPointer<AbstractTrackableProcess>>();
+    return mTracker;
 }
 
-/**
- * @param _name
- * @param _start
- * @param _start
- * @return QList<QSharedPointer<AbstractTrackableProcess>>
- */
-virtual QList<QSharedPointer<AbstractTrackableProcess>> Model::processes(const QString& _name, const QDate& _start, const QDate& _start) const 
+QSharedPointer<AbstractTrackableProcess> Model::currentProcess() const
 {
-    return QList<QSharedPointer<AbstractTrackableProcess>>();
+    return mTracker->currentProcess();
 }
 
-/**
- * @param _name
- * @return QList<QSharedPointer<AbstractTrackableProcess>>
- */
-virtual QList<QSharedPointer<AbstractTrackableProcess>> Model::processes(const QString& _name) const 
+QQueue<QSharedPointer<AbstractTrackableProcess>> Model::processes(const QDateTime& _start, const QDateTime& _end) const
 {
-    return QList<QSharedPointer<AbstractTrackableProcess>>();
+    return mTracker->processes(_start, _end);
 }
 
-/**
- * @return QList<QSharedPointer<AbstractTrackableProcess>>
- */
-virtual QList<QSharedPointer<AbstractTrackableProcess>> Model::processes() const 
+QQueue<QSharedPointer<AbstractTrackableProcess>> Model::processes(const QString& _name, const QDateTime& _start, const QDateTime& _end) const
 {
-    return QList<QSharedPointer<AbstractTrackableProcess>>();
+    return mTracker->processes(_name, _start, _end);
 }
 
-/**
- * @return void
- */
-virtual void Model::startTracking()
+QQueue<QSharedPointer<AbstractTrackableProcess>> Model::processes(const QString& _name) const
 {
-    return;
+    return mTracker->processes(_name);
 }
 
-/**
- * @return void
- */
-virtual void Model::stopTracking()
+QQueue<QSharedPointer<AbstractTrackableProcess>> Model::processes() const
 {
-    return;
+    return mTracker->processes();
+}
+
+void Model::startTracking(int _timerTimeoutMsec)
+{
+    mTracker->startTracking(_timerTimeoutMsec);
+    emit startedTracking(_timerTimeoutMsec);
+}
+
+void Model::stopTracking()
+{
+    mTracker->stopTracking();
+    emit stoppedTracking();
+}
+
+void Model::setTracker(QSharedPointer<AbstractTracker> _tracker)
+{
+    mTracker = _tracker;
+    emit trackerChanged(mTracker);
 }
