@@ -2,8 +2,11 @@
 #include <QColor>
 #include "trackableprocess.h"
 
-TrackableProcess::TrackableProcess(const QString &_name, QObject *_parent)
-    : mName(_name)
+TrackableProcess::TrackableProcess(const QString &_name, const QString &_document, QObject *_parent)
+    : mName(_name),
+      mDocument(_document),
+      mStartDateTime(QDateTime::currentDateTime()),
+      mEndDateTime(QDateTime::currentDateTime())
 {
     setParent(_parent);
 }

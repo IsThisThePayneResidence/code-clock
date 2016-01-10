@@ -1,33 +1,34 @@
 QT += core gui widgets
-TARGET = CodeClock
+TARGET = code-clock
 CONFIG += console c++14
 CONFIG -= app_bundle
 
 TEMPLATE = app
 
-SOURCES += \
-    src/codeclockapplication.cpp \
-    src/main.cpp \
-    src/model.cpp \
-    src/tracker.cpp \
-    src/trackableprocess.cpp \
-    src/codeclockwindow.cpp
-
-HEADERS += \
-    src/abstractmodel.h \
-    src/abstractserializer.h \
-    src/abstracttrackableprocess.h \
-    src/abstracttracker.h \
-    src/codeclockapplication.h \
-    src/model.h \
-    src/tracker.h \
-    src/trackableprocess.h \
-    src/codeclockwindow.h \
-    src/abstractview.h
-
 DISTFILES += \
     README.md
 
+HEADERS += \
+    src/model/abstractmodel.h \
+    src/model/abstractserializer.h \
+    src/model/abstracttrackableprocess.h \
+    src/model/abstracttracker.h \
+    src/model/abstractview.h \
+    src/model/codeclockapplication.h \
+    src/model/model.h \
+    src/model/trackableprocess.h \
+    src/model/tracker.h \
+    src/view/codeclockwindow.h
+
+SOURCES += \
+    src/model/codeclockapplication.cpp \
+    src/model/main.cpp \
+    src/model/model.cpp \
+    src/model/trackableprocess.cpp \
+    src/model/tracker.cpp \
+    src/view/codeclockwindow.cpp
+
 FORMS += \
-    src/codeclockwindow.ui
+    src/view/codeclockwindow.ui
+
 

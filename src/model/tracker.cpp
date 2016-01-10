@@ -4,6 +4,10 @@
 #include "tracker.h"
 #include "trackableprocess.h"
 
+#ifdef Q_OS_WIN
+#include <qt_windows.h>
+#endif
+
 Tracker::Tracker(bool _isStarted, int _msec, QObject *_parent)
     : mTimer(QSharedPointer<QTimer>(new QTimer()))
 {
@@ -11,7 +15,7 @@ Tracker::Tracker(bool _isStarted, int _msec, QObject *_parent)
     if(_isStarted)
     {
         mTimer->start(_msec);
-        connect(mTimer.data(), SIGNAL(timeout()), mTimer.data(), SLOT(start(_msec)));
+        //connect(mTimer.data(), SIGNAL(timeout()), mTimer.data(), SLOT(start(_msec)));
         mState = tr("Tracking");
     }
     else
@@ -59,14 +63,15 @@ void Tracker::startTracking(int _timerTimeoutMsec)
 {
     mTimer->start(_timerTimeoutMsec);
     mTimeoutMsec = _timerTimeoutMsec;
-    connect(mTimer.data(), SIGNAL(timeout()), mTimer.data(), SLOT(start(_timerTimeoutMsec)));
+    //connect(mTimer.data(), SIGNAL(timeout()), mTimer.data(), SLOT(start(_timerTimeoutMsec)));
     mState = tr("Tracking");
     emit trackingStarted(mTimeoutMsec);
 }
 
 void Tracker::stopTracking()
 {
-    disconnect(mTimer.data(), SIGNAL(timeout()), mTimer.data(), SLOT(start(int(_timerTimeoutMsec))));
+    mTimer->stop();
+    //disconnect(mTimer.data(), SIGNAL(timeout()), mTimer.data(), SLOT(start(int(_timerTimeoutMsec))));
     mState = tr("Stopped");
     emit trackingStopped();
 }
@@ -80,20 +85,48 @@ QString Tracker::state() const
 void Tracker::track()
 {
 QString procName;
+QString documentName;
+
 #ifdef Q_OS_UNIX
 
     QScopedPointer<QProcess> proc(new QProcess());
-    proc->start("bash -c \"echo $(cat /proc/$(xdotool getwindowpid $(xdotool getwindowfocus))/comm)\"");
+    proc->start("bash -c \"echo $(xdotool getwindowfocus getwindowname)\"");
     proc->waitForBytesWritten(mTimeoutMsec / 2);
     proc->waitForFinished(mTimeoutMsec / 2);
-    procName = proc->readAllStandardOutput();
+    documentName = proc->readAllStandardOutput();
+
+    if(documentName.split(" - ").size() < 2)
+    {
+        proc->start("bash -c \"echo $(cat /proc/$(xdotool getwindowpid $(xdotool getwindowfocus))/comm)\"");
+        proc->waitForBytesWritten(mTimeoutMsec / 2);
+        proc->waitForFinished(mTimeoutMsec / 2);
+        procName = proc->readAllStandardOutput();
+    }
+    else
+    {
+        procName = documentName.split(" - ").last().trimmed();
+        documentName.remove(" - " + procName);
+        documentName.remove("\n");
+    }
 
 #endif
-    qDebug() << "Current Process: " << procName;
-    if(!mProcesses.isEmpty() && mProcesses.back()->name() == procName)
+
+#ifdef Q_OS_WIN
+
+    char title[256];
+    HWND hwnd = GetForegroundWindow();
+    GetWindowText(hwnd, title, sizeof(title));
+    procName = title;
+
+#endif
+
+    //qDebug() << QString("string with no such a char").split(" - ").size();
+    if(!mProcesses.isEmpty() && mProcesses.back()->name() == procName && mProcesses.back()->document() == documentName)
         mProcesses.back()->setDuration(mProcesses.back()->duration() + mTimeoutMsec);
     else
-        mProcesses.push_back(QSharedPointer<AbstractTrackableProcess>(new TrackableProcess(procName)));
+        mProcesses.push_back(QSharedPointer<AbstractTrackableProcess>(new TrackableProcess(procName, documentName)));
+
+    qDebug() << "\nCurrent Process: " << mProcesses.back()->name() << "\nCurrent Document: " << mProcesses.back()->document() << "\nDuration: " << mProcesses.back()->duration();
     emit tracked(mProcesses.back());
 }
 
