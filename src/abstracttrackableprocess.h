@@ -6,18 +6,14 @@
 #ifndef _ABSTRACTTRACKABLEPROCESS_H
 #define _ABSTRACTTRACKABLEPROCESS_H
 
-#include <QObject>
+#include "qobject.h"
+
 
 class AbstractTrackableProcess: public QObject
 {
-    Q_OBJECT
 public: 
     
     virtual QString name() const = 0;
-
-    virtual QString document() const = 0;
-
-    virtual QString comment() const = 0;
     
     virtual quint64 duration() const = 0;
     
@@ -48,24 +44,7 @@ public:
     /**
      * @param _processes
      */
-    static quint64 totalDuration(QQueue<QSharedPointer<AbstractTrackableProcess>> _processes);
-
-signals:
-
-    void endDateTimeChanged(const QDateTime&);
-
-    void durationChanged(quint64);
-
-public slots:
-
-    virtual void setEndDateTime(const QDateTime& _dateTime) = 0;
-
-    virtual void setDuration(quint64 _msec) = 0;
-
-protected:
-
-private:
-
+    static quint64 totalDuration(QList<QSharedPointer<AbstractTrackableProcess>> _processes);
 };
 
 #endif //_ABSTRACTTRACKABLEPROCESS_H

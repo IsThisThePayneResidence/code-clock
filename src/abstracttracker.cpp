@@ -3,25 +3,17 @@
  */
 
 
-#include "model.h"
+#include "abstracttracker.h"
 
 /**
- * Model implementation
+ * AbstractTracker implementation
  */
 
-
-/**
- * @return QSharedPointer<AbstractTracker>
- */
-virtual QSharedPointer<AbstractTracker> Model::tracker() const 
-{
-    return QSharedPointer<AbstractTracker>();
-}
 
 /**
  * @return QSharedPointer<AbstractTrackableProcess>
  */
-virtual QSharedPointer<AbstractTrackableProcess> Model::currentProcess() const 
+virtual QSharedPointer<AbstractTrackableProcess> AbstractTracker::currentProcess() const 
 {
     return QSharedPointer<AbstractTrackableProcess>();
 }
@@ -31,7 +23,7 @@ virtual QSharedPointer<AbstractTrackableProcess> Model::currentProcess() const
  * @param _start
  * @return QList<QSharedPointer<AbstractTrackableProcess>>
  */
-virtual QList<QSharedPointer<AbstractTrackableProcess>> Model::processes(const QDate& _start, const QDate& _start) const 
+virtual QList<QSharedPointer<AbstractTrackableProcess>> AbstractTracker::processes(const QDate& _start, const QDate& _start) const 
 {
     return QList<QSharedPointer<AbstractTrackableProcess>>();
 }
@@ -42,7 +34,7 @@ virtual QList<QSharedPointer<AbstractTrackableProcess>> Model::processes(const Q
  * @param _start
  * @return QList<QSharedPointer<AbstractTrackableProcess>>
  */
-virtual QList<QSharedPointer<AbstractTrackableProcess>> Model::processes(const QString& _name, const QDate& _start, const QDate& _start) const 
+virtual QList<QSharedPointer<AbstractTrackableProcess>> AbstractTracker::processes(const QString& _name, const QDate& _start, const QDate& _start) const 
 {
     return QList<QSharedPointer<AbstractTrackableProcess>>();
 }
@@ -51,7 +43,7 @@ virtual QList<QSharedPointer<AbstractTrackableProcess>> Model::processes(const Q
  * @param _name
  * @return QList<QSharedPointer<AbstractTrackableProcess>>
  */
-virtual QList<QSharedPointer<AbstractTrackableProcess>> Model::processes(const QString& _name) const 
+virtual QList<QSharedPointer<AbstractTrackableProcess>> AbstractTracker::processes(const QString& _name) const 
 {
     return QList<QSharedPointer<AbstractTrackableProcess>>();
 }
@@ -59,7 +51,7 @@ virtual QList<QSharedPointer<AbstractTrackableProcess>> Model::processes(const Q
 /**
  * @return QList<QSharedPointer<AbstractTrackableProcess>>
  */
-virtual QList<QSharedPointer<AbstractTrackableProcess>> Model::processes() const 
+virtual QList<QSharedPointer<AbstractTrackableProcess>> AbstractTracker::processes() const 
 {
     return QList<QSharedPointer<AbstractTrackableProcess>>();
 }
@@ -67,7 +59,7 @@ virtual QList<QSharedPointer<AbstractTrackableProcess>> Model::processes() const
 /**
  * @return void
  */
-virtual void Model::startTracking()
+virtual void AbstractTracker::startTracking()
 {
     return;
 }
@@ -75,7 +67,15 @@ virtual void Model::startTracking()
 /**
  * @return void
  */
-virtual void Model::stopTracking()
+virtual void AbstractTracker::stopTracking()
 {
     return;
+}
+
+/**
+ * @return QString
+ */
+virtual QString AbstractTracker::state() const 
+{
+    return QString();
 }
