@@ -11,7 +11,7 @@ class TrackableProcess : public AbstractTrackableProcess
     Q_OBJECT
 public:
 
-    TrackableProcess(const QString& _name, const QString& _document, QObject* _parent = nullptr);
+    TrackableProcess(const QString& _name, QObject* _parent = nullptr);
 
     virtual QString name() const Q_DECL_OVERRIDE;
 

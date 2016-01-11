@@ -13,7 +13,7 @@ class CodeClockWindow : public QMainWindow
 
 public:
 
-    explicit CodeClockWindow(QWidget* _parent = nullptr);
+    explicit CodeClockWindow(QWidget *parent = 0);
 
     ~CodeClockWindow();
 
