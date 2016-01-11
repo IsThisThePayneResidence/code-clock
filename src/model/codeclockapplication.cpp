@@ -5,8 +5,6 @@
 
 #include "codeclockapplication.h"
 #include <QSharedPointer>
-#include "../view/diagrams/linearview.h"
-#include "../controller/controller.h"
 
 /**
  * CodeClockApplication implementation
@@ -21,10 +19,7 @@
  */
 CodeClockApplication::CodeClockApplication(int _argc, char **_argv, const QString &_organization, const QString &_application, const QString &_version)
     : QApplication(_argc, _argv),
-      mMainWindow(new CodeClockWindow(mView)),
-      mModel(QSharedPointer<AbstractModel>(new Model(this))),
-      mView(QSharedPointer<AbstractView>(new LinearView(mMainWindow.data()))),
-      mController(QSharedPointer<AbstractController>(new Controller(mModel, mView, mMainWindow.data())))
+      mModel(QSharedPointer<AbstractModel>(new Model()))
 {
     setOrganizationName(_organization);
     setApplicationName(_application);
@@ -33,13 +28,9 @@ CodeClockApplication::CodeClockApplication(int _argc, char **_argv, const QStrin
 }
 
 CodeClockApplication::CodeClockApplication(int _argc, char** _argv, const QString& _organization, const QString& _application,
-                                           const QString& _version, QSharedPointer<AbstractModel> _model, QSharedPointer<AbstractView> _view,
-                                           QSharedPointer<AbstractController> _controller)
+                                            const QString& _version, QSharedPointer<AbstractModel> _model)
     : QApplication(_argc, _argv),
-      mMainWindow(new CodeClockWindow(mView)),
-      mModel(_model),
-      mView(_view),
-      mController(_controller)
+      mModel(_model)
 {
     setOrganizationName(_organization);
     setApplicationName(_application);
@@ -61,6 +52,5 @@ QSharedPointer<CodeClockApplication> CodeClockApplication::app()
 int CodeClockApplication::exec()
 {
     mModel->startTracking();
-    mMainWindow->show();
     return QApplication::exec();
 }

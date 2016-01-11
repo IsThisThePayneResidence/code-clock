@@ -1,8 +1,5 @@
 #include <QDateTime>
 #include <QColor>
-#include <QRgb>
-#include <QDebug>
-#include <QVariant>
 #include "trackableprocess.h"
 
 TrackableProcess::TrackableProcess(const QString &_name, const QString &_document, QObject *_parent)
@@ -12,7 +9,6 @@ TrackableProcess::TrackableProcess(const QString &_name, const QString &_documen
       mEndDateTime(QDateTime::currentDateTime())
 {
     setParent(_parent);
-    mColor = QColor::fromRgb(mName[1].unicode(), mName[2].unicode(), 10);
 }
 
 QString TrackableProcess::name() const
@@ -62,7 +58,7 @@ bool TrackableProcess::endsInInterval(const QDateTime _start, const QDateTime _e
 
 QColor TrackableProcess::color() const
 {
-    return mColor;
+    return QColor("red"); //just for now
 }
 
 void TrackableProcess::setEndDateTime(const QDateTime &_dateTime)
@@ -80,7 +76,6 @@ void TrackableProcess::setDuration(quint64 _msec)
 void TrackableProcess::setName(const QString &_name)
 {
     mName = _name;
-    mColor = QColor::fromRgb(mName[1].unicode(), mName[2].unicode(), 10);
     emit nameChanged(mName);
 }
 

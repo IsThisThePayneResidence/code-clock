@@ -13,7 +13,6 @@ class Tracker : public AbstractTracker
 {
     Q_OBJECT
 public:
-
     Tracker(bool _isStarted = true, int _msec = 1000, QObject* _parent = nullptr);
 
     virtual QSharedPointer<AbstractTrackableProcess> currentProcess() const Q_DECL_OVERRIDE;
@@ -39,8 +38,6 @@ signals:
     void trackingStopped();
 
     void stateChanged(const QString&);
-
-    void dataChanged(const QQueue<QSharedPointer<AbstractTrackableProcess>>&);
 
 public slots:
 
