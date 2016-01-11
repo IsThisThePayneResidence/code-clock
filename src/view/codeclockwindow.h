@@ -7,19 +7,23 @@ namespace Ui {
 class CodeClockWindow;
 }
 
+class AbstractView;
+
 class CodeClockWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
 
-    explicit CodeClockWindow(QWidget* _parent = nullptr);
+    explicit CodeClockWindow(QSharedPointer<AbstractView> _view, QWidget* _parent = nullptr);
 
     ~CodeClockWindow();
 
 private:
 
     Ui::CodeClockWindow *ui;
+
+    QSharedPointer<AbstractView> mView;
 };
 
 #endif // CODECLOCKWINDOW_H

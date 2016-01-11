@@ -13,12 +13,16 @@ Model::Model(QSharedPointer<AbstractTracker> _tracker, QObject* _parent)
     : mTracker(_tracker)
 {
     setParent(_parent);
+    connect(mTracker.data(), SIGNAL(dataChanged(QQueue<QSharedPointer<AbstractTrackableProcess> >)),
+            this, SIGNAL(dataChanged(QQueue<QSharedPointer<AbstractTrackableProcess> >)));
 }
 
 Model::Model(QObject *_parent)
     : mTracker(QSharedPointer<AbstractTracker>(new Tracker()))
 {
     setParent(_parent);
+    connect(mTracker.data(), SIGNAL(dataChanged(QQueue<QSharedPointer<AbstractTrackableProcess> >)),
+            this, SIGNAL(dataChanged(QQueue<QSharedPointer<AbstractTrackableProcess> >)));
 }
 
 QSharedPointer<AbstractTracker> Model::tracker() const

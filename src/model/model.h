@@ -37,6 +37,8 @@ signals:
 
     void stoppedTracking();
 
+    void dataChanged(const QQueue<QSharedPointer<AbstractTrackableProcess>>&);
+
     void trackerChanged(QSharedPointer<AbstractTracker>);
 
 public slots:

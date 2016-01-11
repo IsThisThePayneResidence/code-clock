@@ -126,8 +126,9 @@ QString documentName;
     else
         mProcesses.push_back(QSharedPointer<AbstractTrackableProcess>(new TrackableProcess(procName, documentName)));
 
-    qDebug() << "\nCurrent Process: " << mProcesses.back()->name() << "\nCurrent Document: " << mProcesses.back()->document() << "\nDuration: " << mProcesses.back()->duration();
+    //qDebug() << "\nCurrent Process: " << mProcesses.back()->name() << "\nCurrent Document: " << mProcesses.back()->document() << "\nDuration: " << mProcesses.back()->duration();
     emit tracked(mProcesses.back());
+    emit dataChanged(mProcesses);
 }
 
 int Tracker::timeoutMsec() const

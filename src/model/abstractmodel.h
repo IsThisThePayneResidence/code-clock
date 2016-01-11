@@ -47,6 +47,8 @@ signals:
 
     void stopped();
 
+    void dataChanged(const QQueue<QSharedPointer<AbstractTrackableProcess>>&);
+
 public slots:
 
     virtual void startTracking(int _timerTimeoutMsec = 1000) = 0;
